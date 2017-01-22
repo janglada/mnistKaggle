@@ -24,7 +24,10 @@ batch_size = 256
 nb_classes = 10
 nb_epoch = 100
 
-df = pd.read_csv("./data/train.csv", delimiter = ",", dtype=np.float32)
+df_ori = pd.read_csv("./data/train.csv", delimiter = ",", dtype=np.float32)
+df_tr  = pd.read_csv("train_transformation.csv", delimiter = ",", dtype=np.float32)
+
+df = pd.concat([df_ori, df_tr])
 df.sample(frac=1)
 
 train = df.as_matrix()
@@ -37,7 +40,6 @@ X = X.reshape(X.shape[0], img_width, img_height, 1)
 
 input_shape = (img_width, img_height, 1)
 
-print X.shape
 
 X_train = X.astype('float32')
 X_train /= 255
@@ -52,7 +54,7 @@ Y_train = np_utils.to_categorical(Y, nb_classes)
 
 
 
-model = load_model('model_2.h5')
+model = load_model('model_2_extra_data.h5')
 
 # model = Sequential()
 #
@@ -89,8 +91,8 @@ model.fit(X_train, Y_train,
     batch_size=batch_size,
     nb_epoch=nb_epoch,
     verbose=1,
-    validation_split=0.1
+    validation_split=0.2
 )
 
 
-model.save('model_2_extra.h5')
+model.save('model_2_extra_data.h5')
